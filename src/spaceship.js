@@ -1,3 +1,5 @@
+import Phaser from 'phaser'
+
 class Spaceship extends Phaser.GameObjects.GameObject {
   /** @type {Number} */
   #maxspeed
@@ -21,8 +23,8 @@ class Spaceship extends Phaser.GameObjects.GameObject {
    */
   constructor({
     scene,
-    name = '',
-    description = '',
+    name = 'Default name',
+    description = 'Default description',
     x = 0,
     y = 0,
     maxspeed = 1
@@ -38,7 +40,9 @@ class Spaceship extends Phaser.GameObjects.GameObject {
       { x: 0, y: 10 }
     ]
 
-    this.#body = scene.matter.add.fromVertices(100, 100, vertices)
+    this.#body = scene.matter.add.fromVertices(x, y, vertices, {
+      label: description
+    })
 
     this.#shape = scene.add.polygon(
       this.#body.position.x,
@@ -52,6 +56,33 @@ class Spaceship extends Phaser.GameObjects.GameObject {
     this.#body.gameObject.setFrictionAir(0)
     this.#body.gameObject.setMass(80)
     this.#body.gameObject.setFixedRotation()
+
+    window.spaceship = this.#body.gameObject
+  }
+
+  getCurrentSpeed() {
+    const { x, y } = this.#body.gameObject.getVelocity()
+    return new Phaser.Math.Vector2(x, y).length()
+  }
+
+  limitMaxSpeed() {
+    let maxSpeed = 5
+    const { x, y } = this.#body.gameObject.getVelocity()
+    if (x > maxSpeed) {
+      this.#body.gameObject.setVelocity(maxSpeed, y)
+    }
+
+    if (x < -maxSpeed) {
+      this.#body.gameObject.setVelocity(-maxSpeed, y)
+    }
+
+    if (y > maxSpeed) {
+      this.#body.gameObject.setVelocity(x, maxSpeed)
+    }
+
+    if (y < -maxSpeed) {
+      this.#body.gameObject.setVelocity(-x, -maxSpeed)
+    }
   }
 
   /**
@@ -59,11 +90,16 @@ class Spaceship extends Phaser.GameObjects.GameObject {
    * @param {Boolean} isForward
    */
   thrust(isForward) {
-    if (isForward) {
-      this.#body.gameObject.thrust(0.08)
-    } else {
-      this.#body.gameObject.thrustBack(0.0005)
+    if (this.getCurrentSpeed() > 1) {
+      //return
     }
+    if (isForward) {
+      this.#body.gameObject.thrust(0.02)
+    } else {
+      this.#body.gameObject.thrustBack(0.02)
+    }
+    //console.log(this.getCurrentSpeed())
+    this.limitMaxSpeed()
   }
   /**
    *

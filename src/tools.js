@@ -61,8 +61,10 @@ export const rotate = ({ center, position, angle }) => {
   let radians = (Math.PI / 180) * angle
   let cos = Math.cos(radians)
   let sin = Math.sin(radians)
-  let nx = cos * (position.x - center.x) + sin * (position.y - center.y) + center.x
-  let ny = cos * (position.y - center.y) - sin * (position.x - center.x) + center.y
+  let nx =
+    cos * (position.x - center.x) + sin * (position.y - center.y) + center.x
+  let ny =
+    cos * (position.y - center.y) - sin * (position.x - center.x) + center.y
 
   return {
     x: nx,
@@ -80,4 +82,38 @@ export const distance = (pointFrom, pointTo) => {
   var yDist = pointFrom.y - pointTo.y
 
   return Math.sqrt(xDist * xDist + yDist * yDist)
+}
+
+/**
+ *
+ * @param {String} csv
+ * @param {String} delimiter
+ * @returns
+ */
+export const CSVToJSON = (csv, delimiter = ',') => {
+  let matrix = []
+
+  csv.split('\n').map((line) => {
+    line.trim() == ''
+      ? 0
+      : matrix.push(
+          line
+            .trim()
+            .split(delimiter)
+            .map((v) => v.trim())
+        )
+  })
+
+  let from = 1
+  let jsonResult = []
+  from = from || 0
+  matrix.map((a, i) => {
+    let obj = Object.assign(
+      {},
+      ...matrix[0].map((h, index) => ({ [h]: matrix[i][index] }))
+    )
+    jsonResult.push(obj)
+  })
+
+  return jsonResult.splice(from)
 }

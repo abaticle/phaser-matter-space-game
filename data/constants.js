@@ -3,14 +3,21 @@
  * @readonly
  * @type {Number}
  */
-export const PLANET_SPEED_MODIFIER = 1
+export const PLANET_SPEED_MODIFIER = 0.5
+
+/**
+ * Planet speed modifier
+ * @readonly
+ * @type {Number}
+ */
+export const PLANET_ROTATION_SPEED_MODIFIER = 0.0001
 
 /**
  * Activate matterjs debug
  * @readonly
  * @type {Boolean}
  */
-export const MATTER_DEBUG = false
+export const MATTER_DEBUG = true
 
 /**
  * Default starting game speed
@@ -24,7 +31,7 @@ export const GAME_DEFAULT_SPEED = 1
  * @readonly
  * @type {Number}
  */
-export const GAME_DEFAULT_ZOOM = 2
+export const GAME_DEFAULT_ZOOM = 0.6
 
 /**
  * Keys 

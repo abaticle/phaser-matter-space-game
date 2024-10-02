@@ -2,6 +2,8 @@ import { GAME_DEFAULT_SPEED, GAME_DEFAULT_ZOOM, KEYS } from '../data/constants'
 import Planet from '../src/planet'
 import PlanetManager from '../src/planet-manager'
 import Spaceship from '../src/spaceship'
+import { CSVToJSON } from '../src/tools'
+import Phaser from 'phaser'
 
 class Space extends Phaser.Scene {
   #keys = {}
@@ -32,6 +34,10 @@ class Space extends Phaser.Scene {
 
   preload() {
     this.#planetManager = new PlanetManager()
+    this.load.text({
+      key: 'planets',
+      url: 'data/planets.csv'
+    })
   }
 
   create() {
@@ -48,7 +54,6 @@ class Space extends Phaser.Scene {
   createCamera() {
     this.#camera = this.cameras.main
     this.#camera.setZoom(GAME_DEFAULT_ZOOM)
-    //this.#camera.startFollow(this.#spaceship, false, 0.5, 0.5)
   }
 
   /**
@@ -85,12 +90,66 @@ class Space extends Phaser.Scene {
   }
 
   /**
+   *
+   */
+  getPlanetsFromCSV() {
+    let planets = CSVToJSON(this.cache.text.get('planets'))
+
+    planets = planets.map((planet) => {
+      planet.radius = parseInt(planet.radius)
+      planet.parentDistance = parseInt(planet.parentDistance)
+      planet.speed = parseFloat(planet.speed)
+      planet.color = parseInt(planet.color, 16)
+      planet.mass = parseInt(planet.mass)
+      planet.active = planet.active === 'X'
+
+      return planet
+    })
+
+    return planets
+  }
+
+  /**
+   * Create some planets
+   */
+  createPlanets() {
+    const planets = this.getPlanetsFromCSV()
+
+    planets.forEach((planet) => {
+      if (!planet.active) {
+        return
+      }
+
+      const newPlanet = new Planet({
+        scene: this,
+        name: planet.name,
+        description: planet.description,
+        radius: planet.radius,
+        color: planet.color,
+        speed: planet.speed,
+        rotationSpeed: planet.rotationSpeed,
+        parentDistance: planet.parentDistance,
+        parent: planet.parentName
+          ? this.#planetManager.getPlanet(planet.parentName)
+          : undefined,
+        mass: planet.mass
+      })
+
+      this.#planetManager.addPlanet(newPlanet)
+    })
+  }
+
+  /**
    * Create spaceship
    */
   createSpaceship() {
     this.#spaceship = new Spaceship({
       scene: this,
-      maxspeed: 10
+      x: 200,
+      y: 0,
+      maxspeed: 10,
+      name: 'spaceship',
+      description: 'Spaceship' 
     })
   }
 
@@ -157,49 +216,8 @@ class Space extends Phaser.Scene {
     const newWorldPoint = this.#camera.getWorldPoint(pointer.x, pointer.y)
     this.#camera.scrollX -= newWorldPoint.x - worldPoint.x
     this.#camera.scrollY -= newWorldPoint.y - worldPoint.y
-  }
 
-  /**
-   * Create some planets
-   */
-  createPlanets() {
-    const sun = new Planet({
-      name: 'sun',
-      description: 'Sun',
-      scene: this,
-      x: 300,
-      y: 200,
-      radius: 150,
-      color: 0xfacc00
-    })
-
-    const earth = new Planet({
-      name: 'earth',
-      description: 'Earth',
-      scene: this,
-      x: 300,
-      y: 500,
-      radius: 20,
-      color: 0x969fff,
-      parent: sun,
-      parentDistance: 1000,
-      speed: 0.00001
-    })
-
-    const moon = new Planet({
-      name: 'moon',
-      description: 'Moon',
-      scene: this,
-      x: 300,
-      y: 550,
-      radius: 5,
-      color: 0xd9d9d9,
-      parent: earth,
-      parentDistance: 50,
-      speed: 0.0001
-    })
-
-    this.#planetManager.addPlanets([sun, earth, moon])
+    console.log(`New zoom: ${this.#camera.zoom}`)
   }
 
   update(time, delta) {

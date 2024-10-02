@@ -1,4 +1,5 @@
 import Space from '../scenes/space'
+import Phaser from 'phaser'
 import { MATTER_DEBUG } from '../data/constants'
 
 class Game {
@@ -7,7 +8,7 @@ class Game {
       type: Phaser.AUTO,
       width: window.innerWidth,
       height: window.innerHeight,
-      backgroundColor: '#000000',
+      backgroundColor: '#14213d',
       parent: 'phaser-example',
       physics: {
         default: 'matter',
@@ -16,7 +17,13 @@ class Game {
             y: 0
           },
           enableSleep: true,
-          debug: MATTER_DEBUG
+          debug: {
+            showVelocity: true,
+            showAngleIndicator: true
+          },
+          plugins: {
+            attractors: true
+          }
         }
       },
       scene: Space,
