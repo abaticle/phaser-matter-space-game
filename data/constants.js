@@ -31,7 +31,7 @@ export const GAME_DEFAULT_SPEED = 1
  * @readonly
  * @type {Number}
  */
-export const GAME_DEFAULT_ZOOM = 0.6
+export const GAME_DEFAULT_ZOOM = 2
 
 /**
  * Keys 

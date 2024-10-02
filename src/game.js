@@ -8,7 +8,7 @@ class Game {
       type: Phaser.AUTO,
       width: window.innerWidth,
       height: window.innerHeight,
-      backgroundColor: '#14213d',
+     // backgroundColor: '#14213d',
       parent: 'phaser-example',
       physics: {
         default: 'matter',

@@ -126,6 +126,12 @@ class Spaceship extends Phaser.GameObjects.GameObject {
       y: this.#shape.y
     }
   }
+
+
+
+  _drawNextPositions() {
+    
+  }
 }
 
 export default Spaceship

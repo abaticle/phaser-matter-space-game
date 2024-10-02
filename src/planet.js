@@ -89,6 +89,7 @@ class Planet extends Phaser.GameObjects.GameObject {
   }
 
 
+
   _shader() {
   }
 

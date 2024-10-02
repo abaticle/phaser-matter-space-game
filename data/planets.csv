@@ -1,0 +1,5 @@
+active,name,description,radius,color,parentName,parentDistance,speed,rotationSpeed,mass
+,sun,Sun,700,0xfca311,,0,0,0.01,1000
+,earth,Earth,70,0x1f7a8c,sun,6000,0.000005,0.5,50
+,moon,Moon,20,0xe1e5f2,earth,250,0.000015,1.1,5
+X,test,Test,100,0xe1e5f2,,,,0.2,100

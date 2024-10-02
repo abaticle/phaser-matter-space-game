@@ -208,16 +208,14 @@ class Space extends Phaser.Scene {
    * @param {Phaser.Input.Pointer} pointer
    */
   onPointerWheel(pointer, gameObjects, deltaX, deltaY, deltaZ) {
-    const worldPoint = this.#camera.getWorldPoint(pointer.x, pointer.y)
-    const newZoom = this.#camera.zoom - this.#camera.zoom * 0.011 * deltaY
-    this.#camera.zoom = Phaser.Math.Clamp(newZoom, 0.1, 20)
+    console.log(deltaY)
 
-    this.#camera.preRender()
-    const newWorldPoint = this.#camera.getWorldPoint(pointer.x, pointer.y)
-    this.#camera.scrollX -= newWorldPoint.x - worldPoint.x
-    this.#camera.scrollY -= newWorldPoint.y - worldPoint.y
+    if (deltaY > 0) {
+      this.#camera.zoom -= 0.5
+    } else {
+      this.#camera.zoom += 0.5 
+    }   
 
-    console.log(`New zoom: ${this.#camera.zoom}`)
   }
 
   update(time, delta) {

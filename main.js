@@ -1,11 +1,6 @@
-import Game from "./src/game"
+import Game from './src/game'
 
-
-const start = async() => {
-
+window.onload = () => {
   const game = new Game()
   game.start()
-
 }
-
-start()
